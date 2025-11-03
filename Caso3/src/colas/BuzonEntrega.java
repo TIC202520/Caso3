@@ -5,9 +5,9 @@ import java.util.Queue;
 
 public class BuzonEntrega {
 
-    private  Queue<String> cola = new LinkedList<>();
-    private  int capacidadMaxima;
-    private  int numServidores;
+    private Queue<String> cola = new LinkedList<>();
+    private int capacidadMaxima;
+    private int numServidores;
     private boolean finRecibido = false;
 
     public BuzonEntrega(int capacidadMaxima, int numServidores) {

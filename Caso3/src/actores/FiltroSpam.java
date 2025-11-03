@@ -61,8 +61,8 @@ public class FiltroSpam extends Thread {
                     System.out.println(getName() + " envía mensaje FIN final a entrega y cuarentena.");
                     buzonEntrega.enviarFin();
                     buzonCuarentena.enviarFin();
-                    activo = false; 
-                   
+                    activo = false;
+                
                 }
             }else {
                 boolean esSpam = random.nextBoolean(); // Simula detección de spam aleatoria
@@ -74,7 +74,11 @@ public class FiltroSpam extends Thread {
                 } else {
                     // Enviar a entrega en espera semiactiva
                     System.out.println(getName() + " entrega correo válido -> " + correo);
-                    buzonEntrega.guardarCorreo(correo);
+                    try {
+                        buzonEntrega.guardarCorreo(correo);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

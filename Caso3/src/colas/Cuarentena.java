@@ -12,11 +12,11 @@ import java.util.Random;
  */
 public class Cuarentena {
 
-    private static final int MIN_SEG = 10;
-    private static final int MAX_SEG = 20;
+    private static int MIN_SEG = 10;
+    private static int MAX_SEG = 20;
 
-    private static final class MensajeCuarentena {
-        final String correo;
+    private static class MensajeCuarentena {
+        String correo;
         int Segundos;
         MensajeCuarentena(String correo, int Segundos) {
             this.correo = correo;
@@ -24,8 +24,8 @@ public class Cuarentena {
         }
     }
 
-    private final Queue<MensajeCuarentena> colaCuarentena = new LinkedList<>();
-    private final Random random = new Random();
+    private Queue<MensajeCuarentena> colaCuarentena = new LinkedList<>();
+    private Random random = new Random();
     private boolean finMarcado = false;
 
     public synchronized void guardarCorreo(String correo) {
