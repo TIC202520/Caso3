@@ -15,73 +15,49 @@ public class BuzonEntrega {
         this.numServidores = numServidores;
     }
     
-    public synchronized void guardarCorreo(String correo){
-        boolean agregado = false;
-        while (!agregado) {
-            synchronized (this) {
-                if (cola.size() < capacidadMaxima) {
-                    cola.add(correo);
-                    agregado = true;
-                    notify();
-                }else {
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+     // Productores: espera PASIVA si lleno
+    public synchronized void guardarCorreo(String correo) throws InterruptedException {
+        while (cola.size() == capacidadMaxima) {
+            wait();
         }
+        cola.add(correo);
+        notifyAll();
     }
 
     // Servidores consumen en espera ACTIVA
     public String entregarCorreo() {
-        String correo = null;
-        while (correo == null) {
+        String correo;
+        for (;;)  {
             synchronized (this) {
                 if (!cola.isEmpty()) {
                     correo = cola.poll();
-                    notify();
+                    notifyAll();
+                    return correo;
                 }
             }
+            Thread.yield();
         }
-        return correo;
     }
 
     public void enviarFin() {
         synchronized (this) {
             if (finRecibido) return;
             finRecibido = true;
-            cola.add("FIN");
-            notify();
-    }
-
-        esperarVacioYReplicarFin();
-    }
-
-    private void esperarVacioYReplicarFin() {
-        boolean vacio = false;
-        while (!vacio) {
-            synchronized (this) {
-                vacio = cola.isEmpty();
-            }
-            if (!vacio) {
+            while (!cola.isEmpty()) {
                 try {
-                    Thread.sleep(50); // Espera semiactiva
+                    wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    return;
                 }
             }
-        }
-
-        synchronized (this) {
-            cola.clear();
             for (int i = 0; i < numServidores; i++) {
                 cola.add("FIN");
             }
-            notify();
+            notifyAll(); // despertar a servidores para que tomen sus FIN
         }
     }
+
 
     public synchronized boolean estaVacio() {
         return cola.isEmpty();

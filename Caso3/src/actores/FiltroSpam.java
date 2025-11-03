@@ -13,6 +13,7 @@ public class FiltroSpam extends Thread {
 
     private final int numClientes;
     private static int numFinesRecibidos = 0;
+    private static volatile boolean finGlobalEmitido = false;
 
     private final Random random = new Random();
     private boolean activo = true;
@@ -28,6 +29,10 @@ public class FiltroSpam extends Thread {
     @Override
     public void run() {
         while (activo) {
+            if (finGlobalEmitido) {
+                break;
+            }
+
             // Espera pasiva del buzón de entrada
             String correo = buzonEntrada.entregarCorreo();
 
@@ -39,17 +44,25 @@ public class FiltroSpam extends Thread {
             }
             // Cuenta los clientes terminados
             else if (correo.equals("FIN")) {
+                boolean deboEmitirFinGlobal = false;
+
                 synchronized (FiltroSpam.class) {
                     numFinesRecibidos++;
                     System.out.println(getName() + " recibe FIN. Total recibidos: " + numFinesRecibidos);
+                    if (!finGlobalEmitido && numFinesRecibidos == numClientes) {
+                        finGlobalEmitido = true;
+                        deboEmitirFinGlobal = true; // lo haremos fuera del synchronized
+                    }
                 }
 
-                // Envío FIN final
-                if (numFinesRecibidos == numClientes) {
+        
+                // CAMBIO emitir FIN global fuera del lock para no bloquear a otros
+                if (deboEmitirFinGlobal) {
                     System.out.println(getName() + " envía mensaje FIN final a entrega y cuarentena.");
                     buzonEntrega.enviarFin();
                     buzonCuarentena.enviarFin();
-                    activo = false;
+                    activo = false; 
+                   
                 }
             }else {
                 boolean esSpam = random.nextBoolean(); // Simula detección de spam aleatoria

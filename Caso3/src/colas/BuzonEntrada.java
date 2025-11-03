@@ -6,22 +6,17 @@ import java.util.Queue;
 public class BuzonEntrada {
 
     private Queue<String> cola = new LinkedList<>();
-    int capacidadMaxima;
+    private final int capacidadMaxima;
 
-    public BuzonEntrada(int capacidadMaxima, int numServidores) {
+    public BuzonEntrada(int capacidadMaxima) {
         this.capacidadMaxima = capacidadMaxima;
     }
     
-    public synchronized void recibirCorreo(String correo){
-        while(cola.size()== capacidadMaxima){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    public synchronized void guardarCorreo(String correo) throws InterruptedException {
+        while(cola.size() == capacidadMaxima){
+            wait();}
         cola.add(correo);
-        notify();
+        notifyAll();
     }
 
     public synchronized String entregarCorreo(){
@@ -29,7 +24,8 @@ public class BuzonEntrada {
             try {
                 wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                return null;
             }
         }
         String correo = cola.poll();
