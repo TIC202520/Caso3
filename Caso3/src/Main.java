@@ -1,11 +1,10 @@
-import colas.BuzonEntrada;
-import colas.BuzonEntrega;
-import colas.Cuarentena;
-
 import actores.Clientes;
 import actores.FiltroSpam;
 import actores.ManejadorCuarentena;
 import actores.ServidorEntrega;
+import colas.BuzonEntrada;
+import colas.BuzonEntrega;
+import colas.Cuarentena;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -38,14 +37,14 @@ public class Main {
             filtros[i] = new FiltroSpam(buzonEntrada, buzonEntrega, cuarentena, numClientes, "Filtro-" + (i + 1));
         }
 
-        // Manejador de Cuarentena 
+        // Manejador de Cuarentena
         Thread manejador = new ManejadorCuarentena(cuarentena, buzonEntrega);
 
-        // Servidores 
+        // Servidores
         for (int i = 0; i < numServidores; i++) {
-            servidores[i] = new ServidorEntrega("Servidor-" + (i + 1), buzonEntrega);
+            servidores[i] = new ServidorEntrega(i + 1, buzonEntrega);
         }
-        // Iniciar 
+        // Iniciar
         manejador.start();
         for (Thread t : clientes)   t.start();
         for (Thread t : filtros)    t.start();

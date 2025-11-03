@@ -18,7 +18,7 @@ public class Clientes extends Thread{
     @Override
     public void run(){
         try{
-            entrada.guardarCorreo("INICIO"+ idCliente);
+            entrada.guardarCorreo("INICIO "+ idCliente);
 
             for (int i = 1; i <= kMensajes; i++) {
                 entrada.guardarCorreo("MSG " + i);

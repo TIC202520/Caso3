@@ -39,7 +39,7 @@ public class FiltroSpam extends Thread {
             if (correo == null) continue;
 
             // Mensaje de inicio
-            if (correo.startsWith("INICIO")) {
+            if (correo.startsWith("INICIO ")) {
                 System.out.println(getName() + " detecta inicio de cliente -> " + correo);
             }
             // Cuenta los clientes terminados
