@@ -6,7 +6,7 @@ import java.util.Queue;
 public class BuzonEntrada {
 
     private Queue<String> cola = new LinkedList<>();
-    private final int capacidadMaxima;
+    private int capacidadMaxima;
 
     public BuzonEntrada(int capacidadMaxima) {
         this.capacidadMaxima = capacidadMaxima;
