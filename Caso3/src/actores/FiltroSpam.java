@@ -5,7 +5,7 @@ import colas.BuzonEntrega;
 import colas.Cuarentena;
 import java.util.Random;
 
-public class FiltrosSpam extends Thread {
+public class FiltroSpam extends Thread {
 
     private final BuzonEntrada buzonEntrada;
     private final BuzonEntrega buzonEntrega;
@@ -17,7 +17,7 @@ public class FiltrosSpam extends Thread {
     private final Random random = new Random();
     private boolean activo = true;
 
-    public FiltrosSpam(BuzonEntrada buzonEntrada, BuzonEntrega buzonEntrega, Cuarentena buzonCuarentena, int numClientes, String nombre) {
+    public FiltroSpam(BuzonEntrada buzonEntrada, BuzonEntrega buzonEntrega, Cuarentena buzonCuarentena, int numClientes, String nombre) {
         super(nombre);
         this.buzonEntrada = buzonEntrada;
         this.buzonEntrega = buzonEntrega;
@@ -39,7 +39,7 @@ public class FiltrosSpam extends Thread {
             }
             // Cuenta los clientes terminados
             else if (correo.equals("FIN")) {
-                synchronized (FiltrosSpam.class) {
+                synchronized (FiltroSpam.class) {
                     numFinesRecibidos++;
                     System.out.println(getName() + " recibe FIN. Total recibidos: " + numFinesRecibidos);
                 }

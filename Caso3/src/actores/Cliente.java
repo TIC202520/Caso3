@@ -1,4 +1,4 @@
 package actores;
-public class Clientes {
+public class Cliente {
     
 }
