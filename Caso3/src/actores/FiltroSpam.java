@@ -7,15 +7,15 @@ import java.util.Random;
 
 public class FiltroSpam extends Thread {
 
-    private final BuzonEntrada buzonEntrada;
-    private final BuzonEntrega buzonEntrega;
-    private final Cuarentena buzonCuarentena;
+    private BuzonEntrada buzonEntrada;
+    private BuzonEntrega buzonEntrega;
+    private Cuarentena buzonCuarentena;
 
-    private final int numClientes;
+    private int numClientes;
     private static int numFinesRecibidos = 0;
     private static volatile boolean finGlobalEmitido = false;
 
-    private final Random random = new Random();
+    private Random random = new Random();
     private boolean activo = true;
 
     public FiltroSpam(BuzonEntrada buzonEntrada, BuzonEntrega buzonEntrega, Cuarentena buzonCuarentena, int numClientes, String nombre) {
