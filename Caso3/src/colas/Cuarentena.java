@@ -62,8 +62,6 @@ public class Cuarentena {
     }
         return correosListos;
     }
-    public synchronized int tamano() {
-    return colaCuarentena.size();
-}
+    
 }
 
