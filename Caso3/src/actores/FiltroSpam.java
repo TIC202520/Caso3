@@ -30,6 +30,7 @@ public class FiltroSpam extends Thread {
     public void run() {
         while (activo) {
             if (finGlobalEmitido) {
+                System.out.println(getName() + " detecta FIN global y finaliza.");
                 break;
             }
 
@@ -51,21 +52,38 @@ public class FiltroSpam extends Thread {
                     System.out.println(getName() + " recibe FIN. Total recibidos: " + numFinesRecibidos);
                     if (!finGlobalEmitido && numFinesRecibidos == numClientes) {
                         finGlobalEmitido = true;
-                        deboEmitirFinGlobal = true; // lo haremos fuera del synchronized
+                        deboEmitirFinGlobal = true;
                     }
                 }
 
-        
-                // CAMBIO emitir FIN global fuera del lock para no bloquear a otros
                 if (deboEmitirFinGlobal) {
+                    while (true) {
+                        boolean entradaVacia, cuarentenaVacia;
+                        synchronized (buzonEntrada) {
+                        entradaVacia = buzonEntrada.estaVacio();
+                        }
+                        synchronized (buzonCuarentena) {
+                            cuarentenaVacia = buzonCuarentena.estaVacia();
+                        }
+
+                        if (entradaVacia && cuarentenaVacia) break;
+
+                        try {
+                              Thread.sleep(50); // espera semiactiva (evita busy-wait)
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            break;
+                        }
+    }
+
                     System.out.println(getName() + " envía mensaje FIN final a entrega y cuarentena.");
-                    buzonEntrega.enviarFin();
                     buzonCuarentena.enviarFin();
+                    buzonEntrega.enviarFin();
+                    buzonEntrada.marcarFinGlobal();
                     activo = false;
-                
-                }
+}
             }else {
-                boolean esSpam = random.nextBoolean(); // Simula detección de spam aleatoria
+                boolean esSpam = random.nextBoolean();
 
                 if (esSpam) {
                     // Cuarentena en espera semiactiva

@@ -1,14 +1,13 @@
 package actores;
 
-import colas.Cuarentena;
 import colas.BuzonEntrega;
-
+import colas.Cuarentena;
 import java.util.List;
 
 public class ManejadorCuarentena extends Thread {
 
-    private final Cuarentena cuarentena;
-    private final BuzonEntrega buzonEntrega;
+    private Cuarentena cuarentena;
+    private BuzonEntrega buzonEntrega;
     private int contadorProcesados = 0;
 
     public ManejadorCuarentena(Cuarentena cuarentena, BuzonEntrega buzonEntrega) {
@@ -21,7 +20,7 @@ public class ManejadorCuarentena extends Thread {
     public void run() {
         try {
             while (true) {
-                Thread.sleep(1000); // Paso de 1 segundo
+                Thread.sleep(1000);
                 List<String> correosListos = cuarentena.tickYExtraerListos();
 
                 for (String correo : correosListos) {
@@ -34,6 +33,9 @@ public class ManejadorCuarentena extends Thread {
                 if (cuarentena.finMarcado() && cuarentena.estaVacia()) {
                     break;
                 }
+                if (cuarentena.finMarcado()) {
+                }
+
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

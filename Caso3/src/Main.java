@@ -8,14 +8,14 @@ import colas.Cuarentena;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        final int numMensajes   = 100; // por cliente
-        final int numClientes   = 10;
-        final int numFiltros    = 5;
-        final int numManejadores= 1;
-        final int numServidores = 3;
+        int numMensajes   = 100; // por cliente
+        int numClientes   = 10;
+        int numFiltros    = 5;
+        int numManejadores= 1;
+        int numServidores = 3;
 
-        final int capEntrada = 20;
-        final int capEntrega = 20;
+        int capEntrada = 20;
+        int capEntrega = 20;
 
         // Buzones y cuarentena
         BuzonEntrada  buzonEntrada = new BuzonEntrada(capEntrada);

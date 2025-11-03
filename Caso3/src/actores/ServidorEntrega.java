@@ -24,7 +24,6 @@ public class ServidorEntrega extends Thread {
             String mensaje = buzonEntrega.entregarCorreo();
 
             if (mensaje != null) {
-                // Si recibe mensaje FIN, el servidor termina
                 if (mensaje.equals("FIN")) {
                     System.out.println(getName() + " recibe FIN y termina su ejecución.");
                     activo = false;

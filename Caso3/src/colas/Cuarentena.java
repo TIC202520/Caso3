@@ -48,20 +48,22 @@ public class Cuarentena {
 
     public synchronized List<String> tickYExtraerListos() {
         for (MensajeCuarentena item : colaCuarentena) {
-            item.Segundos -= 1;
-        }
+        item.Segundos -= 1;
+    }
 
-        List<String> correosListos = new ArrayList<>();
-        List<MensajeCuarentena> aEliminar = new ArrayList<>();
-        for (MensajeCuarentena item : colaCuarentena) {
-            if (item.Segundos <= 0) {
-                correosListos.add(item.correo);
-                aEliminar.add(item);
-            }
+    List<String> correosListos = new ArrayList<>();
+    var iter = colaCuarentena.iterator();
+    while (iter.hasNext()) {
+        MensajeCuarentena item = iter.next();
+        if (item.Segundos <= 0) {
+            correosListos.add(item.correo);
+            iter.remove();
         }
-        colaCuarentena.removeAll(aEliminar);
-
+    }
         return correosListos;
     }
+    public synchronized int tamano() {
+    return colaCuarentena.size();
+}
 }
 

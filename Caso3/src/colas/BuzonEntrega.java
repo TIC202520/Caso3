@@ -24,7 +24,7 @@ public class BuzonEntrega {
         notifyAll();
     }
 
-    // Servidores consumen en espera ACTIVA
+    // Espera ACTIVA
     public String entregarCorreo() {
         String correo;
         for (;;)  {
@@ -39,25 +39,16 @@ public class BuzonEntrega {
         }
     }
 
-    public void enviarFin() {
-        synchronized (this) {
-            if (finRecibido) return;
-            finRecibido = true;
-            while (!cola.isEmpty()) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-            }
-            for (int i = 0; i < numServidores; i++) {
-                cola.add("FIN");
-            }
-            notifyAll(); // despertar a servidores para que tomen sus FIN
-        }
-    }
+    public synchronized void enviarFin() {
+    if (finRecibido) return;
+    finRecibido = true;
 
+    // Insertar una copia de "FIN" por cada servidor
+    for (int i = 0; i < numServidores; i++) {
+        cola.add("FIN");
+    }
+    notifyAll();
+}
 
     public synchronized boolean estaVacio() {
         return cola.isEmpty();

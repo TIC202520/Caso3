@@ -7,6 +7,7 @@ public class BuzonEntrada {
 
     private Queue<String> cola = new LinkedList<>();
     private int capacidadMaxima;
+    private boolean finGlobal = false;
 
     public BuzonEntrada(int capacidadMaxima) {
         this.capacidadMaxima = capacidadMaxima;
@@ -20,7 +21,7 @@ public class BuzonEntrada {
     }
 
     public synchronized String entregarCorreo(){
-        while (cola.isEmpty()) {
+        while (cola.isEmpty()&& !finGlobal) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -28,13 +29,20 @@ public class BuzonEntrada {
                 return null;
             }
         }
+        if (cola.isEmpty() && finGlobal) {
+            return null;
+        }
         String correo = cola.poll();
-        notify();
+        notifyAll();
         return correo;
     }
     
     public synchronized boolean estaVacio() {
         return cola.isEmpty();
+    }
+    public synchronized void marcarFinGlobal() {
+        finGlobal = true;
+        notifyAll();
     }
 }
 
