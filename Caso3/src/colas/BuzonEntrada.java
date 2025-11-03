@@ -7,7 +7,6 @@ public class BuzonEntrada {
 
     private Queue<String> cola = new LinkedList<>();
     int capacidadMaxima;
-    private boolean finRecibido = false;
 
     public BuzonEntrada(int capacidadMaxima, int numServidores) {
         this.capacidadMaxima = capacidadMaxima;
