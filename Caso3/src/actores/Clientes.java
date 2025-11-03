@@ -6,10 +6,9 @@ public class Clientes extends Thread{
     private final BuzonEntrada entrada;
     private final int kMensajes;
 
-    public Clientes(BuzonEntrada entrada){
+    public Clientes(BuzonEntrada entrada, int kMensajes){
         this.entrada = entrada;
         this.kMensajes = kMensajes;
-
     }
 
     @Override
